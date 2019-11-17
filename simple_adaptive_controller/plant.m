@@ -5,7 +5,7 @@ switch flag,
   case 1,
     sys=mdlDerivatives(t,x,u);   %调用计算微分子函数
   case 2,
-    sys=mdlUpdate(t,x,u);   %调用离散状态变量更新子函数
+    sys=[];
   case 3,
     sys=mdlOutputs(t,x,u);    %计算输出子函数
   case 4,
@@ -40,10 +40,6 @@ dt = sin(t);
 ut = u(1);
 sys(1) = x(2);
 sys(2) = 1/J*(ut+dt);
-
-function sys=mdlUpdate(t,x,u)  %离散状态变量更新子函数
-
-sys = [];
 
 function sys=mdlOutputs(t,x,u)   %计算输出子函数
 sys(1) = x(1);

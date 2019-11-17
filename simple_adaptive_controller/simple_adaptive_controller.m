@@ -3,9 +3,9 @@ switch flag,
   case 0,
     [sys,x0,str,ts]=mdlInitializeSizes;  % 调用初始化子函数
   case 1,
-    sys=mdlDerivatives(t,x,u);   %调用计算微分子函数
+    sys=[];
   case 2,
-    sys=mdlUpdate(t,x,u);   %调用离散状态变量更新子函数
+    sys=[];
   case 3,
     sys=mdlOutputs(t,x,u);    %计算输出子函数
   case 4,
@@ -33,14 +33,6 @@ x0  = [];   %初始值
 str = [];   
 ts  = [];   %[0 0]用于连续系统，[-1 0]表示继承其前的采样时间设置
 simStateCompliance = 'UnknownSimState';
-
-function sys = mdlDerivatives(t, x, u)    %计算微分子函数
-
-sys = [];   %计算结果由sys变量返回
-
-function sys=mdlUpdate(t,x,u)  %离散状态变量更新子函数
-
-sys = [];
 
 function sys=mdlOutputs(t,x,u)   %计算输出子函数
 
