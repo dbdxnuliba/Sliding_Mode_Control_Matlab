@@ -1,4 +1,4 @@
-function [sys,x0,str,ts] = homework_controller(t, x, u, flag)
+function [sys,x0,str,ts] = robustness_backstepping_controller(t, x, u, flag)
 switch flag,
   case 0,
     [sys,x0,str,ts]=mdlInitializeSizes;  % 调用初始化子函数
@@ -24,7 +24,7 @@ sizes = simsizes;
 sizes.NumContStates  = 0;  %连续状态变量个数
 sizes.NumDiscStates  = 0;  %离散状态变量个数
 sizes.NumOutputs     = 3;  %输出变量个数
-sizes.NumInputs      = 4;   %输入变量个数
+sizes.NumInputs      = 3;   %输入变量个数
 sizes.DirFeedthrough = 1;   %输入信号是否在输出端出现
 sizes.NumSampleTimes = 0;   % at least one sample time is needed
 
@@ -38,40 +38,26 @@ function sys=mdlOutputs(t,x,u)   %计算输出子函数
 thd = u(1);
 dthd = cos(t);
 ddthd = -sin(t);
-dddthd = -cos(t);
 
 x1 = u(2);
 dx1 = u(3);
-
-f = 2*x1^2;
-df = 4*x1*dx1;
-
+f = x1^5-x1^6;
 x2 = dx1 - f;
-dx2 = u(4);
-
-
-k1 = 10;
-k2 = 10;
-k3 = 10;
-
-ddf = 
+df = 5*x1^4*dx1-6*x1^5*dx1;
 
 z1 = x1 - thd;
 dz1 = dx1 - dthd;
-x2d = -f+dthd-k1*z1;
-dx2d = -df + ddthd - k1*dz1;
-ddx2d = 
 
-z2 = x2 - x2d;
-dz2 = dx2 - dx2d;
+k1 = 50;
+h = 20;
+beta = 1.5;
+c1 = 70;
+F_bar = 2;
 
-x3 = dx2;
+z2 = x2 + c1*z1 + f - dthd;
+sigma = k1*z1 + z2;
 
-x3d = dx2d - k2*z2-z1;
-dx3d = ddx2d - k2*dz2 - dz1;
-z3 = x3 - x3d;
-
-ut = dx3d - z2 - k3*z3;
+ut = -k1*(f + x2 - dthd) - F_bar*sign(sigma) + ddthd - c1*dz1 - df - h*(sigma + beta*sign(sigma));
 
 sys(1) = ut;
 sys(2) = x2;
